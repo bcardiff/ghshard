@@ -1,0 +1,13 @@
+name: gh-shard
+version: 0.1.0
+
+authors:
+  - Brian J. Cardiff <bcardiff@manas.com.ar>
+
+targets:
+  gh-shard:
+    main: src/gh-shard.cr
+
+crystal: 0.20.1
+
+license: MIT
