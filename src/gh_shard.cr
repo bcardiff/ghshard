@@ -1,9 +1,9 @@
-require "./gh-shard/*"
+require "./gh_shard/*"
 require "file_utils"
 # require "option_parser"
 include FileUtils
 
-module Gh::Shard
+module GhShard
   # TODO Put your code here
 end
 

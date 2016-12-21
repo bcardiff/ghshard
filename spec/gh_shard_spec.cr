@@ -1,8 +1,6 @@
 require "./spec_helper"
 
-describe Gh::Shard do
-  # TODO: Write tests
-
+describe GhShard do
   it "works" do
     false.should eq(true)
   end

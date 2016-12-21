@@ -1,2 +1,2 @@
 require "spec"
-require "../src/gh-shard"
+require "../src/gh_shard"

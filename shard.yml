@@ -1,12 +1,12 @@
-name: gh-shard
+name: ghshard
 version: 0.1.0
 
 authors:
   - Brian J. Cardiff <bcardiff@manas.com.ar>
 
 targets:
-  gh-shard:
-    main: src/gh-shard.cr
+  ghshard:
+    main: src/gh_shard.cr
 
 crystal: 0.20.1
 
