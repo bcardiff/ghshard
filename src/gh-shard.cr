@@ -27,6 +27,17 @@ def uncommitted_changes?
   `git status --porcelain`.chomp.size > 0
 end
 
+def perfom_commit_push(message)
+  `git add --all`
+
+  if uncommitted_changes?
+    `git commit -m \"#{message}\"`
+  else
+    puts "No changes to commit."
+  end
+  `git push #{remote_name} #{branch_name}`
+end
+
 options = ARGV
 command = options.first?
 options.shift
@@ -81,14 +92,7 @@ when "publish-docs"
     rm_rf target_dir
     cp_r "../doc", target_dir
 
-    `git add --all`
-    if uncommitted_changes?
-      message = "publishing docs for #{tag}"
-      `git commit -m \"#{message}\"`
-    else
-      puts "No changes to commit."
-    end
-    `git push #{remote_name} #{branch_name}`
+    perfom_commit_push "publishing docs for #{tag}"
   end
 when "redirect"
   puts "redirecting docs..."
@@ -136,14 +140,16 @@ when "redirect"
     rm_rf from_dir
     mkdir_p from_dir
 
-    # TODO handle nested directory
-    Dir["#{to_dir}/{*.html,*.md}"].each do |dest|
-      dest_name = File.basename(dest)
-      ext = File.extname(dest_name)
-      dest_no_ext = File.basename(dest_name, ext)
+    Dir["#{to_dir}/**/{*.html,*.md}"].each do |dest|
+      relative_file = dest[to_dir.size + 1..-1]
+      relative_file_no_ext = relative_file[0..-File.extname(relative_file).size - 1]
 
-      target_url = "../#{to}#{dest_no_ext != "index" ? "/#{dest_no_ext}.html" : ""}"
-      File.write("#{from_dir}/#{dest_no_ext}.md",
+      level = 1 + relative_file_no_ext.count(File::SEPARATOR)
+      target_url = "#{"../" * level}#{to}#{relative_file_no_ext != "index" ? "/#{relative_file_no_ext}.html" : ""}"
+      redirector_file = "#{from_dir}/#{relative_file_no_ext}.md"
+      mkdir_p File.dirname(redirector_file)
+
+      File.write(redirector_file,
         <<-MD
         ---
         redirect_to:
@@ -153,14 +159,7 @@ when "redirect"
       )
     end
 
-    `git add --all`
-    if uncommitted_changes?
-      message = "publishing redirect #{from} -> #{to}"
-      `git commit -m \"#{message}\"`
-    else
-      puts "No changes to commit."
-    end
-    `git push #{remote_name} #{branch_name}`
+    perfom_commit_push "publishing redirect #{from} -> #{to}"
   end
 else
   puts "TODO USAGE"
