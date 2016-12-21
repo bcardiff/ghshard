@@ -6,7 +6,7 @@ authors:
 
 targets:
   ghshard:
-    main: src/gh_shard.cr
+    main: src/cli.cr
 
 crystal: 0.20.1
 
