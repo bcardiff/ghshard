@@ -9,11 +9,27 @@ Helper for crystal shards that are hosted in github.
 
 ## Installation
 
+### As a standalone executable
+
 ```
 $ git clone https://github.com/bcardiff/ghshard.git
 $ cd ghshard
 $ shards build
 # keep ./bin/ghshard executable where you can find it
+```
+
+### As a development dependency
+
+```
+# shard.yml
+development_dependencies:
+  ghshard:
+    github: bcardiff/ghshard
+```
+
+```
+$ crystal deps
+# use ./bin/ghshard
 ```
 
 ## Usage
@@ -27,7 +43,7 @@ You favorite shard is read for a proper presentation to the world.
 
 ```
 $ cd path/to/shard
-$ ghshard docs:publish
+$ ./bin/ghshard docs:publish
 ```
 
 It will create the `gh-pages` branch and submit the result of `crystal docs` to `/api/0.1.0`.
@@ -37,29 +53,31 @@ You can add redirections:
 * from `/api/0.1/*` to `/api/0.1.0/*`
 
 ```
-$ ghshard docs:redirect 0.1 0.1.0
+$ ./bin/ghshard docs:redirect 0.1 0.1.0
 ```
 
 * from `/api/latest/*` to `/api/0.1/*`
 
 ```
-$ ghshard docs:redirect latest 0.1
+$ ./bin/ghshard docs:redirect latest 0.1
 ```
 
 When you are ready to release 0.1.1 you will need to:
 
 ```
-$ ghshard docs:publish
-$ ghshard docs:redirect 0.1 0.1.1
+$ ./bin/ghshard docs:publish
+$ ./bin/ghshard docs:redirect 0.1 0.1.1
 ```
 
 When you are ready to release 0.2.0 you will need to:
 
 ```
-$ ghshard docs:publish
-$ ghshard docs:redirect 0.2 0.2.0
-$ ghshard docs:redirect latest 0.2
+$ ./bin/ghshard docs:publish
+$ ./bin/ghshard docs:redirect 0.2 0.2.0
+$ ./bin/ghshard docs:redirect latest 0.2
 ```
+
+Check the [Lorem sample project](https://github.com/bcardiff/crystal-lorem).
 
 ## Roadmap
 
