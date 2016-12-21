@@ -8,6 +8,14 @@ targets:
   ghshard:
     main: src/cli.cr
 
+scripts:
+  postinstall: |
+    shards build
+    mkdir -p ../../bin
+    rm -f $(pwd)/../../bin/ghshard
+    ln -s $(pwd)/bin/ghshard $(pwd)/../../bin/ghshard
+
 crystal: 0.20.1
 
 license: MIT
+
