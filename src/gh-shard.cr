@@ -19,6 +19,10 @@ def branch_name
   ENV.fetch("BRANCH_NAME", "gh-pages")
 end
 
+def api_prefix
+  ENV.fetch("API_PREFIX", "/api")
+end
+
 def uncommitted_changes?
   `git status --porcelain`.chomp.size > 0
 end
@@ -43,7 +47,7 @@ when "publish-docs"
 
   project_root = ENV.fetch("PROJECT_ROOT", `git rev-parse --show-toplevel`.chomp)
   build_dir = ENV.fetch("BUILD_DIR", File.join(project_root, ".gh-pages"))
-  api_dir = "#{build_dir}/api"
+  api_dir = "#{build_dir}#{api_prefix}"
   gh_pages_ref = File.join(build_dir, ".git/refs/remotes/#{remote_name}/#{branch_name}")
   repo_url = `git config --get remote.#{remote_name}.url`.chomp
 
@@ -97,7 +101,7 @@ when "redirect"
 
   project_root = ENV.fetch("PROJECT_ROOT", `git rev-parse --show-toplevel`.chomp)
   build_dir = ENV.fetch("BUILD_DIR", File.join(project_root, ".gh-pages"))
-  api_dir = "#{build_dir}/api"
+  api_dir = "#{build_dir}#{api_prefix}"
   gh_pages_ref = File.join(build_dir, ".git/refs/remotes/#{remote_name}/#{branch_name}")
   repo_url = `git config --get remote.#{remote_name}.url`.chomp
 
@@ -133,14 +137,17 @@ when "redirect"
     mkdir_p from_dir
 
     # TODO handle nested directory
-    # TODO handle top level index /latest -> /0.1.0 (maybe redirect_from)
-    Dir["#{to_dir}/*.html"].each do |dest|
+    Dir["#{to_dir}/{*.html,*.md}"].each do |dest|
       dest_name = File.basename(dest)
-      File.write("#{from_dir}/#{dest_name}.md",
+      ext = File.extname(dest_name)
+      dest_no_ext = File.basename(dest_name, ext)
+
+      target_url = "../#{to}#{dest_no_ext != "index" ? "/#{dest_no_ext}.html" : ""}"
+      File.write("#{from_dir}/#{dest_no_ext}.md",
         <<-MD
         ---
         redirect_to:
-          - ../#{to}/#{dest_name}
+          - #{target_url}
         ---
         MD
       )
