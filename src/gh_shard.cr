@@ -128,8 +128,7 @@ module GhShard
           relative_file = dest[to_dir.size + 1..-1]
           relative_file_no_ext = relative_file[0..-File.extname(relative_file).size - 1]
 
-          level = 1 + relative_file_no_ext.count(File::SEPARATOR)
-          target_url = "#{"../" * level}#{to}#{relative_file_no_ext != "index" ? "/#{relative_file_no_ext}.html" : ""}"
+          target_url = "#{@config.api_prefix}/#{to}#{relative_file_no_ext != "index" ? "/#{relative_file_no_ext}.html" : ""}"
           redirector_file = "#{from_dir}/#{relative_file_no_ext}.md"
           mkdir_p File.dirname(redirector_file)
 
