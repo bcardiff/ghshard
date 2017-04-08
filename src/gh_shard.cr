@@ -24,6 +24,11 @@ module GhShard
     gh_pages_ref = File.join(build_dir, ".git/refs/remotes/#{config.remote_name}/#{config.branch_name}")
     repo_url = `git config --get remote.#{config.remote_name}.url`.chomp
 
+    baseurl = "CHANGE_ME"
+    if md = repo_url.match /github\.com(?:\:|\/)(?<user>(?:\w|-|_)+)\/(?<repo>(?:\w|-|_|\.)+?)(?:\.git)?$/
+      baseurl = md["repo"]
+    end
+
     rm_rf build_dir
     mkdir_p build_dir
     cd build_dir do
@@ -39,6 +44,7 @@ module GhShard
           <<-EOF
           gems:
             - jekyll-redirect-from
+          baseurl: /#{baseurl}
           EOF
         )
         `touch index.html`
