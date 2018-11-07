@@ -104,7 +104,7 @@ module GhShard
       GhShard.on_build_dir @git, @config do |api_dir|
         target_dir = "#{api_dir}/#{tag}"
         rm_rf target_dir
-        cp_r "../doc", target_dir
+        cp_r "../docs", target_dir
         @git.perfom_commit_push "publishing docs for #{tag}"
       end
     end
